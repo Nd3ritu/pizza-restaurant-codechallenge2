@@ -78,5 +78,37 @@ class Pizzas(Resource):
         return make_response(jsonify(pizzas),200)
     
 api.add_resource(Pizzas,'/pizzas')
+
+class RestaurantsPizzas(Resource):
+    def post(self):
+        data =request.get_json()
+
+        restaurant = Restaurant.query.filter_by(id = data['restaurant_id']).first()
+        pizza = Pizza.query.filter_by(id = data['pizza_id']).first()
+
+        if not restaurant and not pizza:
+            return {
+                "errors":['validation errors']
+            }, 404
+        
+        newrestaurantpizza = RestaurantPizza(
+            price=data['price'],
+            restaurant_id=data['restaurant_id'],
+            pizza_id=data['pizza_id']
+        )
+
+        db.session.add(newrestaurantpizza)
+        db.session.commit()
+
+        pdata ={
+            "id":pizza.id,
+            "name":pizza.name,
+            "ingredients":pizza.ingredients
+        }
+
+        return pdata,201
+api.add_resource(RestaurantsPizzas,'/restaurantpizzas')
+
+
 if __name__ == '__main__':
     app.run(port=5555)
