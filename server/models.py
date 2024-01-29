@@ -20,6 +20,7 @@ class Restaurant(db.Model):
             raise ValueError("Name must be present")
         if len(name) < 4:
             raise ValueError("Name must be at least 4 characters long")
+        return name
         
     def __repr__(self) :
         return f'<Restaurant {self.name}>'
@@ -51,7 +52,7 @@ class RestaurantPizza(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey("restaurants.id"))
     pizza_id = db.Column(db.Integer, db.ForeignKey("pizzas.id"))
 
-    @validates('prices')
+    @validates('price')
     def validate_price(self,key, price):
         if not (1 <= int(price) <= 30):
             raise ValueError("Price must be betweem 1 and 30.")
