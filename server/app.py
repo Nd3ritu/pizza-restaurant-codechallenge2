@@ -72,5 +72,11 @@ class OneRestaurant(Resource):
             return make_response(jsonify({"error":"Restaurant not found therefore can't delete"}))
 api.add_resource(OneRestaurant,'/restaurants/<int:id>')
 
+class Pizzas(Resource):
+    def get(self):
+        pizzas = [{'id':pizza.id, 'name':pizza.name,'ingredients':pizza.ingredients}for pizza in Pizza.query.all()]
+        return make_response(jsonify(pizzas),200)
+    
+api.add_resource(Pizzas,'/pizzas')
 if __name__ == '__main__':
     app.run(port=5555)
